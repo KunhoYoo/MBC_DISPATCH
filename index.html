@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>배차 신청서</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: #f4f6fa;
+      margin: 0;
+      padding: 0;
+    }
+    .form-container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 15px;
+    }
+    h2 {
+      text-align: center;
+      color: #2d6cdf;
+      margin-bottom: 15px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 12px;
+      padding: 15px;
+    }
+    .card h3 {
+      margin-top: 0;
+      font-size: 15px;
+      color: #444;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 5px;
+      margin-bottom: 10px;
+    }
+    .field {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 10px;
+    }
+    .field label {
+      font-size: 13px;
+      margin-bottom: 4px;
+      color: #333;
+    }
+    .field input[type="text"],
+    .field input[type="date"],
+    .field input[type="time"] {
+      padding: 8px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    /* 체크박스 공통 스타일 */
+    .checkbox-group {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 6px;
+      overflow-x: auto;
+    }
+    .checkbox-group label {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: clamp(11px, 3vw, 14px);
+      background: #f9f9f9;
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+    .checkbox-group input[type="checkbox"] {
+      display: none;
+    }
+    .checkbox-group span {
+      display: inline-block;
+    }
+    .checkbox-group label:has(input[type="checkbox"]:checked) {
+      background: #2d6cdf;
+      border-color: #2d6cdf;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    /* 버튼 */
+    .button-group {
+      display: flex;
+      gap: 10px;
+    }
+    .btn {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 15px;
+      color: #fff;
+    }
+    .btn-save {
+      background: #2d6cdf;
+    }
+    .btn-save:hover {
+      background: #1e4dab;
+    }
+    .btn-reset {
+      background: #e74c3c;
+    }
+    .btn-reset:hover {
+      background: #c0392b;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>배차신청서</h2>
+    
+    <form id="dispatchForm">
+      <div class="card">
+        <h3>신청 정보</h3>
+        <div class="field">
+          <label>신청부서</label>
+          <input type="text" id="dept" value="취재2부">
+        </div>
+        <div class="field">
+          <label>탑승자명</label>
+          <input type="text" id="passenger">
+        </div>
+        <div class="field">
+          <label>직급</label>
+          <input type="text" id="position">
+        </div>
+        <div class="field">
+          <label>연락처(내선)</label>
+          <input type="text" id="tel" value="0945">
+        </div>
+        <div class="field">
+          <label>연락처(H.P)</label>
+          <input type="text" id="hp">
+        </div>
+      </div>
+      
+      <div class="card">
+        <h3>운행 일정</h3>
+        <div class="field">
+          <label>배차일자</label>
+          <input type="date" id="dateStart"> ~ <input type="date" id="dateEnd">
+        </div>
+        <div class="field">
+          <label>배차시간</label>
+          <input type="time" id="timeStart"> ~ <input type="time" id="timeEnd">
+        </div>
+        <div class="field">
+          <label>운행구분</label>
+          <div class="checkbox-group" id="driveType">
+            <label><input type="checkbox" value="왕복"> <span>왕복</span></label>
+            <label><input type="checkbox" value="편도"> <span>편도</span></label>
+            <label><input type="checkbox" value="픽업"> <span>픽업</span></label>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <h3>배차 장소</h3>
+        <div class="checkbox-group" id="location">
+          <label><input type="checkbox" value="방송센터" checked> <span>방송센터</span></label>
+          <label><input type="checkbox" value="드림센터"> <span>드림센터</span></label>
+          <label><input type="checkbox" value="기타"> <span>기타</span></label>
+        </div>
+      </div>
+      
+      <div class="card">
+        <h3>업무 및 행선지</h3>
+        <div class="field">
+          <label>행선지</label>
+          <input type="text" id="destination">
+        </div>
+        <div class="field">
+          <label>업무내용</label>
+          <input type="text" id="task" value="취재">
+        </div>
+      </div>
+      
+      <div class="card">
+        <h3>차량 정보</h3>
+        <div class="field">
+          <label>탑승인원</label>
+          <input type="text" id="people" value="2">
+        </div>
+        <div class="field">
+          <label>희망차량</label>
+          <div class="checkbox-group" id="vehicle">
+            <label><input type="checkbox" value="승용차"> <span>승용차</span></label>
+            <label><input type="checkbox" value="승합차"> <span>승합차</span></label>
+            <label><input type="checkbox" value="미니버스"> <span>미니버스</span></label>
+            <label><input type="checkbox" value="대형버스"> <span>대형버스</span></label>
+          </div>
+        </div>
+        <div class="field">
+          <label>운행구분</label>
+          <div class="checkbox-group" id="driveOption">
+            <label><input type="checkbox" value="기사포함운행" checked> <span>기사포함운행</span></label>
+            <label><input type="checkbox" value="자가운전"> <span>자가운전</span></label>
+          </div>
+        </div>
+      </div>
+      
+      <div class="button-group">
+        <button type="button" class="btn btn-save" onclick="saveForm()">저장</button>
+        <button type="button" class="btn btn-reset" onclick="resetForm()">리셋</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    // 저장 기능
+    function saveForm() {
+      const dept = document.getElementById("dept").value;
+      const passenger = document.getElementById("passenger").value || "미입력";
+      const position = document.getElementById("position").value || "미입력";
+      const tel = document.getElementById("tel").value;
+      const hp = document.getElementById("hp").value || "";
+      const dateStart = document.getElementById("dateStart").value || "미정";
+      const dateEnd = document.getElementById("dateEnd").value || "미정";
+      const timeStart = document.getElementById("timeStart").value || "미정";
+      const timeEnd = document.getElementById("timeEnd").value || "미정";
+      const destination = document.getElementById("destination").value || "미입력";
+      const task = document.getElementById("task").value;
+      const people = document.getElementById("people").value;
+
+      const driveType = [...document.querySelectorAll("#driveType input:checked")].map(cb => cb.value).join(", ") || "미선택";
+      const location = [...document.querySelectorAll("#location input:checked")].map(cb => cb.value).join(", ") || "미선택";
+      const vehicle = [...document.querySelectorAll("#vehicle input:checked")].map(cb => cb.value).join(", ") || "미선택";
+      const driveOption = [...document.querySelectorAll("#driveOption input:checked")].map(cb => cb.value).join(", ") || "미선택";
+
+      let text = 
+`신청부서 : ${dept}
+탑승자명 : ${passenger}
+직급 : ${position}
+연락처(내선) : ${tel}
+연락처(H.P) : ${hp}
+배차 시작 일자 : ${dateStart}
+배차 종료 일자 : ${dateEnd}
+배차 시작 시간 : ${timeStart}
+배차 종료 시간 : ${timeEnd}
+운행구분 : ${driveType}
+배차장소 : ${location}
+행선지 : ${destination}
+업무내용 : ${task}
+탑승인원 : ${people}명
+희망차량 : ${vehicle}
+운행구분 : ${driveOption}`;
+
+      navigator.clipboard.writeText(text).then(() => {
+        alert("클립보드에 저장되었습니다!");
+      });
+    }
+
+    // 리셋 기능
+    function resetForm() {
+      if(confirm("디폴트 값 제외 모든 내용을 초기화 하시겠습니까?")) {
+        document.getElementById("dispatchForm").reset();
+        // 디폴트 값 복원
+        document.getElementById("dept").value = "취재2부";
+        document.getElementById("tel").value = "0945";
+        document.getElementById("task").value = "취재";
+        document.getElementById("people").value = "2";
+        document.querySelector("#location input[value='방송센터']").checked = true;
+        document.querySelector("#driveOption input[value='기사포함운행']").checked = true;
+      }
+    }
+  </script>
+</body>
+</html>
