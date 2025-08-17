@@ -169,7 +169,7 @@
       <div class="card">
         <h3>신청 정보</h3>
         <div class="field">
-          <label for="dept">신청부서</label>
+          <label for="dept">신청 부서</label>
           <input type="text" id="dept" inputmode="text" value="취재2부">
         </div>
         <div class="field">
@@ -193,7 +193,7 @@
       <div class="card">
         <h3>운행 일정</h3>
         <div class="field">
-          <label>배차일자</label>
+          <label>배차 일자</label>
           <div class="input-row">
             <input type="date" id="dateStart">
             <span class="separator" aria-hidden="true">~</span>
@@ -201,7 +201,7 @@
           </div>
         </div>
         <div class="field">
-          <label>배차시간</label>
+          <label>배차 시간</label>
           <div class="input-row">
             <input type="time" id="timeStart" step="300">
             <span class="separator" aria-hidden="true">~</span>
@@ -209,7 +209,7 @@
           </div>
         </div>
         <div class="field">
-          <label>운행 구분</label>
+          <label>이동 구분</label>
           <div class="checkbox-group" id="driveType">
             <input id="dt_rb" type="checkbox" value="왕복"><label for="dt_rb" class="checkbox-pill">왕복</label>
             <input id="dt_od" type="checkbox" value="편도"><label for="dt_od" class="checkbox-pill">편도</label>
@@ -234,7 +234,7 @@
           <input type="text" id="destination" inputmode="text" placeholder="예) 서울역">
         </div>
         <div class="field">
-          <label for="task">업무내용</label>
+          <label for="task">업무 내용</label>
           <input type="text" id="task" inputmode="text" value="취재">
         </div>
       </div>
@@ -242,7 +242,7 @@
       <div class="card">
         <h3>차량 정보</h3>
         <div class="field">
-          <label for="people">탑승인원</label>
+          <label for="people">탑승 인원</label>
           <input type="text" id="people" inputmode="numeric" value="2" placeholder="예) 2">
         </div>
         <div class="field">
@@ -349,13 +349,13 @@
 배차 종료 일자 : ${safe(d.dateEnd,'미정')}
 배차 시작 시간 : ${safe(d.timeStart,'미정')}
 배차 종료 시간 : ${safe(d.timeEnd,'미정')}
-운행구분 : ${opt(d.driveType)}
-배차장소 : ${opt(d.location)}
+이동 구분 : ${opt(d.driveType)}
+배차 장소 : ${opt(d.location)}
 행선지 : ${safe(d.destination)}
-업무내용 : ${safe(d.task)}
-탑승인원 : ${safe(d.people)}명
-희망차량 : ${opt(d.vehicle)}
-운행옵션 : ${opt(d.driveOption)}`;
+업무 내용 : ${safe(d.task)}
+탑승 인원 : ${safe(d.people)}명
+희망 차량 : ${opt(d.vehicle)}
+운행 구분 : ${opt(d.driveOption)}`;
     }
 
     function saveForm(){
@@ -399,5 +399,6 @@
   </script>
 </body>
 </html>
+
 
 
