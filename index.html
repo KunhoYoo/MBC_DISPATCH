@@ -3,278 +3,399 @@
 <head>
   <meta charset="UTF-8">
   <title>배차 신청서</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <style>
+    /* NanumBarunGothic from Noonnu CDN */
+    @font-face {
+      font-family: 'NanumBarunGothic';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-07@1.0/NanumBarunGothic.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+    :root {
+      --primary:#2d6cdf;
+      --bg:#f6f7fb;
+      --card:#fff;
+      --text:#222;
+      --muted:#4b5563;
+      --border:#e5e7eb;
+      --radius:14px;
+      --pad:14px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    html{-webkit-text-size-adjust:100%}
     body {
-      font-family: 'Noto Sans KR', sans-serif;
-      background: #f4f6fa;
+      font-family: 'NanumBarunGothic','Noto Sans KR',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background: var(--bg);
       margin: 0;
       padding: 0;
+      color: var(--text);
+      line-height: 1.42;
     }
     .form-container {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 15px;
+      width: min(720px, 100%);
+      margin-inline: auto;
+      padding: 8px clamp(10px, 3.5vw, 18px) 18px;
     }
     h2 {
       text-align: center;
-      color: #2d6cdf;
-      margin-bottom: 15px;
+      color: var(--primary);
+      margin: 8px 0 10px; /* 상단 여백 좁힘 */
+      font-size: clamp(20px, 4.8vw, 28px);
+      letter-spacing: 0.02em;
+      font-weight: 700;
     }
     .card {
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: 0 2px 10px rgba(0,0,0,.05);
       margin-bottom: 12px;
-      padding: 15px;
+      padding: var(--pad);
+      border: 1px solid var(--border);
     }
     .card h3 {
-      margin-top: 0;
-      font-size: 15px;
-      color: #444;
-      border-bottom: 1px solid #eee;
-      padding-bottom: 5px;
-      margin-bottom: 10px;
+      margin: 0 0 10px;
+      font-size: clamp(13px, 3.6vw, 16px);
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 6px;
+      font-weight: 700;
     }
     .field {
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 6px;
       margin-bottom: 10px;
     }
     .field label {
-      font-size: 13px;
-      margin-bottom: 4px;
-      color: #333;
+      font-size: clamp(12px, 3.4vw, 14px);
+      color: #111;
     }
+    .input-row {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 8px;
+    }
+    /* Stack on narrow screens */
+    @media (max-width: 480px) {
+      .input-row {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+      .input-row span.separator {
+        display: none;
+      }
+    }
+    /* Inputs */
     .field input[type="text"],
     .field input[type="date"],
     .field input[type="time"] {
-      padding: 8px;
-      font-size: 14px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
+      width: 100%;
+      padding: 12px 12px;
+      font-size: 16px; /* >=16px to prevent iOS zoom */
+      border: 1px solid #cfd5db;
+      border-radius: 10px;
+      background: #fff;
+      outline: none;
+      min-height: 44px; /* touch target */
     }
-
-    /* 체크박스 공통 스타일 */
+    .field input:focus{border-color: var(--primary); box-shadow: 0 0 0 3px rgba(45,108,223,.12);}
+    /* Checkbox pill group */
     .checkbox-group {
       display: flex;
-      flex-wrap: nowrap;
-      gap: 6px;
-      overflow-x: auto;
+      flex-wrap: wrap;
+      gap: 8px;
     }
-    .checkbox-group label {
-      display: flex;
+    .checkbox-group input[type="checkbox"] { display: none; }
+    .checkbox-pill {
+      display: inline-flex;
       align-items: center;
-      gap: 4px;
-      font-size: clamp(11px, 3vw, 14px);
-      background: #f9f9f9;
-      padding: 6px 12px;
-      border-radius: 20px;
-      border: 1px solid #ccc;
+      gap: 8px;
+      padding: 10px 14px;
+      font-size: 15px;
+      border-radius: 999px;
+      border: 1px solid #cfd5db;
+      background: #f9fafb;
       cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.2s ease;
+      user-select: none;
+      transition: background .2s, border-color .2s, color .2s, transform .05s;
+      min-height: 40px;
     }
-    .checkbox-group input[type="checkbox"] {
-      display: none;
-    }
-    .checkbox-group span {
-      display: inline-block;
-    }
-    .checkbox-group label:has(input[type="checkbox"]:checked) {
-      background: #2d6cdf;
-      border-color: #2d6cdf;
+    .checkbox-pill:active { transform: scale(.98); }
+    .checkbox-group input[type="checkbox"]:checked + .checkbox-pill {
+      background: var(--primary);
+      border-color: var(--primary);
       color: #fff;
-      font-weight: 600;
+      font-weight: 700;
     }
-
-    /* 버튼 */
     .button-group {
-      display: flex;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 10px;
+      margin-top: 8px;
     }
     .btn {
-      flex: 1;
-      padding: 12px;
+      padding: 14px;
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
       font-size: 16px;
       cursor: pointer;
-      margin-top: 15px;
       color: #fff;
+      min-height: 48px;
+      letter-spacing: .02em;
     }
-    .btn-save {
-      background: #2d6cdf;
+    .btn-save { background: var(--primary); }
+    .btn-save:active { filter: brightness(.95); }
+    .btn-reset { background: #ea4335; }
+    .btn-reset:active { filter: brightness(.95); }
+    .muted {
+      font-size: 12px;
+      color: #6b7280;
+      text-align: center;
+      margin-top: 8px;
     }
-    .btn-save:hover {
-      background: #1e4dab;
-    }
-    .btn-reset {
-      background: #e74c3c;
-    }
-    .btn-reset:hover {
-      background: #c0392b;
-    }
+    /* Safe area for iPhone (notch) */
+    .form-container { padding-top: max(8px, env(safe-area-inset-top)); padding-bottom: max(18px, env(safe-area-inset-bottom)); }
   </style>
 </head>
 <body>
   <div class="form-container">
-    <h2>배차신청서</h2>
-    
-    <form id="dispatchForm">
+    <h2>배차 신청서</h2>
+
+    <form id="dispatchForm" autocomplete="on">
       <div class="card">
         <h3>신청 정보</h3>
         <div class="field">
-          <label>신청부서</label>
-          <input type="text" id="dept" value="취재2부">
+          <label for="dept">신청부서</label>
+          <input type="text" id="dept" inputmode="text" value="취재2부">
         </div>
         <div class="field">
-          <label>탑승자명</label>
-          <input type="text" id="passenger">
+          <label for="passenger">탑승자명</label>
+          <input type="text" id="passenger" inputmode="text" placeholder="예: 홍길동">
         </div>
         <div class="field">
-          <label>직급</label>
-          <input type="text" id="position">
+          <label for="position">직급</label>
+          <input type="text" id="position" inputmode="text" placeholder="예: 기자">
         </div>
         <div class="field">
-          <label>연락처(내선)</label>
-          <input type="text" id="tel" value="0945">
+          <label for="tel">연락처(내선)</label>
+          <input type="text" id="tel" inputmode="numeric" value="0945" placeholder="예: 0945">
         </div>
         <div class="field">
-          <label>연락처(H.P)</label>
-          <input type="text" id="hp">
+          <label for="hp">연락처(H.P)</label>
+          <input type="text" id="hp" inputmode="tel" placeholder="예: 010-0000-0000">
         </div>
       </div>
-      
+
       <div class="card">
         <h3>운행 일정</h3>
         <div class="field">
           <label>배차일자</label>
-          <input type="date" id="dateStart"> ~ <input type="date" id="dateEnd">
+          <div class="input-row">
+            <input type="date" id="dateStart">
+            <span class="separator" aria-hidden="true">~</span>
+            <input type="date" id="dateEnd">
+          </div>
         </div>
         <div class="field">
           <label>배차시간</label>
-          <input type="time" id="timeStart"> ~ <input type="time" id="timeEnd">
+          <div class="input-row">
+            <input type="time" id="timeStart" step="300">
+            <span class="separator" aria-hidden="true">~</span>
+            <input type="time" id="timeEnd" step="300">
+          </div>
         </div>
         <div class="field">
-          <label>운행구분</label>
+          <label>운행 구분</label>
           <div class="checkbox-group" id="driveType">
-            <label><input type="checkbox" value="왕복"> <span>왕복</span></label>
-            <label><input type="checkbox" value="편도"> <span>편도</span></label>
-            <label><input type="checkbox" value="픽업"> <span>픽업</span></label>
+            <input id="dt_rb" type="checkbox" value="왕복"><label for="dt_rb" class="checkbox-pill">왕복</label>
+            <input id="dt_od" type="checkbox" value="편도"><label for="dt_od" class="checkbox-pill">편도</label>
+            <input id="dt_pk" type="checkbox" value="픽업"><label for="dt_pk" class="checkbox-pill">픽업</label>
           </div>
         </div>
       </div>
-      
+
       <div class="card">
         <h3>배차 장소</h3>
         <div class="checkbox-group" id="location">
-          <label><input type="checkbox" value="방송센터" checked> <span>방송센터</span></label>
-          <label><input type="checkbox" value="드림센터"> <span>드림센터</span></label>
-          <label><input type="checkbox" value="기타"> <span>기타</span></label>
+          <input id="loc_bs" type="checkbox" value="방송센터" checked><label for="loc_bs" class="checkbox-pill">방송센터</label>
+          <input id="loc_dc" type="checkbox" value="드림센터"><label for="loc_dc" class="checkbox-pill">드림센터</label>
+          <input id="loc_et" type="checkbox" value="기타"><label for="loc_et" class="checkbox-pill">기타</label>
         </div>
       </div>
-      
+
       <div class="card">
         <h3>업무 및 행선지</h3>
         <div class="field">
-          <label>행선지</label>
-          <input type="text" id="destination">
+          <label for="destination">행선지</label>
+          <input type="text" id="destination" inputmode="text" placeholder="예: 서울역">
         </div>
         <div class="field">
-          <label>업무내용</label>
-          <input type="text" id="task" value="취재">
+          <label for="task">업무내용</label>
+          <input type="text" id="task" inputmode="text" value="취재">
         </div>
       </div>
-      
+
       <div class="card">
         <h3>차량 정보</h3>
         <div class="field">
-          <label>탑승인원</label>
-          <input type="text" id="people" value="2">
+          <label for="people">탑승인원</label>
+          <input type="text" id="people" inputmode="numeric" value="2" placeholder="예: 2">
         </div>
         <div class="field">
-          <label>희망차량</label>
+          <label>희망 차량</label>
           <div class="checkbox-group" id="vehicle">
-            <label><input type="checkbox" value="승용차"> <span>승용차</span></label>
-            <label><input type="checkbox" value="승합차"> <span>승합차</span></label>
-            <label><input type="checkbox" value="미니버스"> <span>미니버스</span></label>
-            <label><input type="checkbox" value="대형버스"> <span>대형버스</span></label>
+            <input id="vh_sd" type="checkbox" value="승용차"><label for="vh_sd" class="checkbox-pill">승용차</label>
+            <input id="vh_vn" type="checkbox" value="승합차"><label for="vh_vn" class="checkbox-pill">승합차</label>
+            <input id="vh_mb" type="checkbox" value="미니버스"><label for="vh_mb" class="checkbox-pill">미니버스</label>
+            <input id="vh_lb" type="checkbox" value="대형버스"><label for="vh_lb" class="checkbox-pill">대형버스</label>
           </div>
         </div>
         <div class="field">
-          <label>운행구분</label>
+          <label>운행 구분</label>
           <div class="checkbox-group" id="driveOption">
-            <label><input type="checkbox" value="기사포함운행" checked> <span>기사포함운행</span></label>
-            <label><input type="checkbox" value="자가운전"> <span>자가운전</span></label>
+            <input id="op_dr" type="checkbox" value="기사포함운행" checked><label for="op_dr" class="checkbox-pill">기사포함운행</label>
+            <input id="op_self" type="checkbox" value="자가운전"><label for="op_self" class="checkbox-pill">자가운전</label>
           </div>
         </div>
       </div>
-      
+
       <div class="button-group">
-        <button type="button" class="btn btn-save" onclick="saveForm()">저장</button>
-        <button type="button" class="btn btn-reset" onclick="resetForm()">리셋</button>
+        <button type="button" class="btn btn-save" id="btnSave">저장</button>
+        <button type="button" class="btn btn-reset" id="btnReset">리셋</button>
       </div>
     </form>
+
+    <p class="muted">※ 서버 동기화 없음. 해당 기기/브라우저에만 로컬 저장됩니다.</p>
   </div>
 
   <script>
-    // 저장 기능
-    function saveForm() {
-      const dept = document.getElementById("dept").value;
-      const passenger = document.getElementById("passenger").value || "미입력";
-      const position = document.getElementById("position").value || "미입력";
-      const tel = document.getElementById("tel").value;
-      const hp = document.getElementById("hp").value || "";
-      const dateStart = document.getElementById("dateStart").value || "미정";
-      const dateEnd = document.getElementById("dateEnd").value || "미정";
-      const timeStart = document.getElementById("timeStart").value || "미정";
-      const timeEnd = document.getElementById("timeEnd").value || "미정";
-      const destination = document.getElementById("destination").value || "미입력";
-      const task = document.getElementById("task").value;
-      const people = document.getElementById("people").value;
+    // ---------- Local-only autosave (localStorage) ----------
+    const STORAGE_KEY = 'dispatchForm:v2-mobile';
 
-      const driveType = [...document.querySelectorAll("#driveType input:checked")].map(cb => cb.value).join(", ") || "미선택";
-      const location = [...document.querySelectorAll("#location input:checked")].map(cb => cb.value).join(", ") || "미선택";
-      const vehicle = [...document.querySelectorAll("#vehicle input:checked")].map(cb => cb.value).join(", ") || "미선택";
-      const driveOption = [...document.querySelectorAll("#driveOption input:checked")].map(cb => cb.value).join(", ") || "미선택";
+    const qs = (sel, root=document)=>root.querySelector(sel);
+    const qsa = (sel, root=document)=>Array.from(root.querySelectorAll(sel));
 
-      let text = 
-`신청부서 : ${dept}
-탑승자명 : ${passenger}
-직급 : ${position}
-연락처(내선) : ${tel}
-연락처(H.P) : ${hp}
-배차 시작 일자 : ${dateStart}
-배차 종료 일자 : ${dateEnd}
-배차 시작 시간 : ${timeStart}
-배차 종료 시간 : ${timeEnd}
-운행구분 : ${driveType}
-배차장소 : ${location}
-행선지 : ${destination}
-업무내용 : ${task}
-탑승인원 : ${people}명
-희망차량 : ${vehicle}
-운행구분 : ${driveOption}`;
+    function getFormData(){
+      return {
+        dept: qs('#dept').value,
+        passenger: qs('#passenger').value,
+        position: qs('#position').value,
+        tel: qs('#tel').value,
+        hp: qs('#hp').value,
+        dateStart: qs('#dateStart').value,
+        dateEnd: qs('#dateEnd').value,
+        timeStart: qs('#timeStart').value,
+        timeEnd: qs('#timeEnd').value,
+        destination: qs('#destination').value,
+        task: qs('#task').value,
+        people: qs('#people').value,
+        driveType: qsa('#driveType input[type=checkbox]:checked').map(el=>el.value),
+        location: qsa('#location input[type=checkbox]:checked').map(el=>el.value),
+        vehicle: qsa('#vehicle input[type=checkbox]:checked').map(el=>el.value),
+        driveOption: qsa('#driveOption input[type=checkbox]:checked').map(el=>el.value),
+      };
+    }
+    function setFormData(data){
+      if(!data) return;
+      const map = {
+        dept:'#dept', passenger:'#passenger', position:'#position', tel:'#tel', hp:'#hp',
+        dateStart:'#dateStart', dateEnd:'#dateEnd', timeStart:'#timeStart', timeEnd:'#timeEnd',
+        destination:'#destination', task:'#task', people:'#people'
+      };
+      Object.entries(map).forEach(([k,sel])=>{
+        if(data[k]!==undefined) qs(sel).value = data[k];
+      });
+      [['#driveType','driveType'], ['#location','location'], ['#vehicle','vehicle'], ['#driveOption','driveOption']]
+        .forEach(([sel,key])=>{
+          const setVals = new Set(data[key]||[]);
+          qsa(`${sel} input[type=checkbox]`).forEach(i=> i.checked = setVals.has(i.value));
+        });
+    }
+    function saveLocal(){
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(getFormData())); }
+      catch(e){ console.warn('로컬 저장 실패:', e); }
+    }
+    function loadLocal(){
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(raw) setFormData(JSON.parse(raw));
+      } catch(e){ console.warn('로컬 불러오기 실패:', e); }
+    }
+    function clearLocal(){ localStorage.removeItem(STORAGE_KEY); }
 
-      navigator.clipboard.writeText(text).then(() => {
-        alert("클립보드에 저장되었습니다!");
+    function attachAutosave(){
+      qsa('input').forEach(el=>{
+        el.addEventListener('input', saveLocal, {passive:true});
+        el.addEventListener('change', saveLocal, {passive:true});
       });
     }
 
-    // 리셋 기능
-    function resetForm() {
-      if(confirm("디폴트 값 제외 모든 내용을 초기화 하시겠습니까?")) {
-        document.getElementById("dispatchForm").reset();
-        // 디폴트 값 복원
-        document.getElementById("dept").value = "취재2부";
-        document.getElementById("tel").value = "0945";
-        document.getElementById("task").value = "취재";
-        document.getElementById("people").value = "2";
-        document.querySelector("#location input[value='방송센터']").checked = true;
-        document.querySelector("#driveOption input[value='기사포함운행']").checked = true;
+    // ---------- Clipboard Save / Reset ----------
+    function buildSummaryText(){
+      const d = getFormData();
+      const safe = (v, alt='미입력') => (v && String(v).trim().length ? v : alt);
+      const opt = (arr, alt='미선택') => (arr && arr.length ? arr.join(', ') : alt);
+
+      return `신청부서 : ${safe(d.dept)}
+탑승자명 : ${safe(d.passenger)}
+직급 : ${safe(d.position)}
+연락처(내선) : ${safe(d.tel,'미입력')}
+연락처(H.P) : ${safe(d.hp,'')}
+배차 시작 일자 : ${safe(d.dateStart,'미정')}
+배차 종료 일자 : ${safe(d.dateEnd,'미정')}
+배차 시작 시간 : ${safe(d.timeStart,'미정')}
+배차 종료 시간 : ${safe(d.timeEnd,'미정')}
+운행구분 : ${opt(d.driveType)}
+배차장소 : ${opt(d.location)}
+행선지 : ${safe(d.destination)}
+업무내용 : ${safe(d.task)}
+탑승인원 : ${safe(d.people)}명
+희망차량 : ${opt(d.vehicle)}
+운행옵션 : ${opt(d.driveOption)}`;
+    }
+
+    function saveForm(){
+      const text = buildSummaryText();
+      navigator.clipboard.writeText(text).then(()=>{
+        alert('클립보드에 저장되었습니다!');
+      }).catch(()=>{
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        alert('클립보드에 저장되었습니다!');
+      });
+    }
+
+    function resetForm(){
+      if(confirm('Default 값을 제외한, 모든 내용을 초기화 하시겠습니까?')){
+        qs('#dispatchForm').reset();
+        // defaults
+        qs('#dept').value = '취재2부';
+        qs('#tel').value = '0945';
+        qs('#task').value = '취재';
+        qs('#people').value = '2';
+        // checkbox defaults
+        qsa('#location input[type=checkbox]').forEach(i=>i.checked=false);
+        qsa('#driveOption input[type=checkbox]').forEach(i=>i.checked=false);
+        qs("#loc_bs").checked = true;
+        qs("#op_dr").checked = true;
+        clearLocal();
       }
     }
+
+    document.addEventListener('DOMContentLoaded', ()=>{
+      loadLocal();
+      attachAutosave();
+      qs('#btnSave').addEventListener('click', saveForm);
+      qs('#btnReset').addEventListener('click', resetForm);
+    }, {once:true});
   </script>
 </body>
 </html>
