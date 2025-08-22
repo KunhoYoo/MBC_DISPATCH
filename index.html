@@ -5,7 +5,6 @@
   <title>배차 신청서</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <style>
-    /* NanumBarunGothic from Noonnu CDN */
     @font-face {
       font-family: 'NanumBarunGothic';
       src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-07@1.0/NanumBarunGothic.woff') format('woff');
@@ -42,7 +41,7 @@
     h2 {
       text-align: center;
       color: var(--primary);
-      margin: 8px 0 10px; /* 상단 여백 좁힘 */
+      margin: 8px 0 10px;
       font-size: clamp(20px, 4.8vw, 28px);
       letter-spacing: 0.02em;
       font-weight: 700;
@@ -79,41 +78,34 @@
       align-items: center;
       gap: 8px;
     }
-    /* Stack on narrow screens */
     @media (max-width: 480px) {
-      .input-row {
-        grid-template-columns: 1fr;
-        gap: 6px;
-      }
-      .input-row span.separator {
-        display: none;
-      }
+      .input-row { grid-template-columns: 1fr; gap: 6px; }
+      .input-row span.separator { display: none; }
     }
-    /* Inputs */
     .field input[type="text"],
     .field input[type="date"],
     .field input[type="time"] {
       width: 100%;
       padding: 12px 12px;
-      font-size: 16px; /* >=16px to prevent iOS zoom */
+      font-size: 16px;
       border: 1px solid #cfd5db;
       border-radius: 10px;
       background: #fff;
       outline: none;
-      min-height: 44px; /* touch target */
+      min-height: 44px;
     }
     .field input:focus{border-color: var(--primary); box-shadow: 0 0 0 3px rgba(45,108,223,.12);}
-    /* Checkbox pill group */
-    .checkbox-group {
+
+    /* NEW: button toggle group, replaces checkboxes */
+    .btn-toggle-group {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
     }
-    .checkbox-group input[type="checkbox"] { display: none; }
-    .checkbox-pill {
+    .btn-chip {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      justify-content: center;
       padding: 10px 14px;
       font-size: 15px;
       border-radius: 999px;
@@ -124,13 +116,14 @@
       transition: background .2s, border-color .2s, color .2s, transform .05s;
       min-height: 40px;
     }
-    .checkbox-pill:active { transform: scale(.98); }
-    .checkbox-group input[type="checkbox"]:checked + .checkbox-pill {
+    .btn-chip:active { transform: scale(.98); }
+    .btn-chip.selected {
       background: var(--primary);
       border-color: var(--primary);
       color: #fff;
       font-weight: 700;
     }
+
     .button-group {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -157,7 +150,6 @@
       text-align: center;
       margin-top: 8px;
     }
-    /* Safe area for iPhone (notch) */
     .form-container { padding-top: max(8px, env(safe-area-inset-top)); padding-bottom: max(18px, env(safe-area-inset-bottom)); }
   </style>
 </head>
@@ -210,20 +202,20 @@
         </div>
         <div class="field">
           <label>이동 구분</label>
-          <div class="checkbox-group" id="driveType">
-            <input id="dt_rb" type="checkbox" value="왕복"><label for="dt_rb" class="checkbox-pill">왕복</label>
-            <input id="dt_od" type="checkbox" value="편도"><label for="dt_od" class="checkbox-pill">편도</label>
-            <input id="dt_pk" type="checkbox" value="픽업"><label for="dt_pk" class="checkbox-pill">픽업</label>
+          <div class="btn-toggle-group" id="driveType" data-select="single">
+            <button type="button" class="btn-chip" data-value="왕복">왕복</button>
+            <button type="button" class="btn-chip" data-value="편도">편도</button>
+            <button type="button" class="btn-chip" data-value="픽업">픽업</button>
           </div>
         </div>
       </div>
 
       <div class="card">
         <h3>배차 장소</h3>
-        <div class="checkbox-group" id="location">
-          <input id="loc_bs" type="checkbox" value="방송센터" checked><label for="loc_bs" class="checkbox-pill">방송센터</label>
-          <input id="loc_dc" type="checkbox" value="드림센터"><label for="loc_dc" class="checkbox-pill">드림센터</label>
-          <input id="loc_et" type="checkbox" value="기타"><label for="loc_et" class="checkbox-pill">기타</label>
+        <div class="btn-toggle-group" id="location" data-select="single">
+          <button type="button" class="btn-chip" data-value="방송센터" data-default="true">방송센터</button>
+          <button type="button" class="btn-chip" data-value="드림센터">드림센터</button>
+          <button type="button" class="btn-chip" data-value="기타">기타</button>
         </div>
       </div>
 
@@ -247,18 +239,18 @@
         </div>
         <div class="field">
           <label>희망 차량</label>
-          <div class="checkbox-group" id="vehicle">
-            <input id="vh_sd" type="checkbox" value="승용차"><label for="vh_sd" class="checkbox-pill">승용차</label>
-            <input id="vh_vn" type="checkbox" value="승합차"><label for="vh_vn" class="checkbox-pill">승합차</label>
-            <input id="vh_mb" type="checkbox" value="미니버스"><label for="vh_mb" class="checkbox-pill">미니버스</label>
-            <input id="vh_lb" type="checkbox" value="대형버스"><label for="vh_lb" class="checkbox-pill">대형버스</label>
+          <div class="btn-toggle-group" id="vehicle" data-select="single">
+            <button type="button" class="btn-chip" data-value="승용차">승용차</button>
+            <button type="button" class="btn-chip" data-value="승합차">승합차</button>
+            <button type="button" class="btn-chip" data-value="미니버스">미니버스</button>
+            <button type="button" class="btn-chip" data-value="대형버스">대형버스</button>
           </div>
         </div>
         <div class="field">
           <label>운행 구분</label>
-          <div class="checkbox-group" id="driveOption">
-            <input id="op_dr" type="checkbox" value="기사포함운행" checked><label for="op_dr" class="checkbox-pill">기사포함운행</label>
-            <input id="op_self" type="checkbox" value="자가운전"><label for="op_self" class="checkbox-pill">자가운전</label>
+          <div class="btn-toggle-group" id="driveOption" data-select="single">
+            <button type="button" class="btn-chip" data-value="기사포함운행" data-default="true">기사포함운행</button>
+            <button type="button" class="btn-chip" data-value="자가운전">자가운전</button>
           </div>
         </div>
       </div>
@@ -273,12 +265,38 @@
   </div>
 
   <script>
-    // ---------- Local-only autosave (localStorage) ----------
-    const STORAGE_KEY = 'dispatchForm:v2-mobile';
+    const STORAGE_KEY = 'dispatchForm:v3-buttons';
 
     const qs = (sel, root=document)=>root.querySelector(sel);
     const qsa = (sel, root=document)=>Array.from(root.querySelectorAll(sel));
 
+    // --- Button toggle helpers ---
+    function initButtonGroups(){
+      qsa('.btn-toggle-group').forEach(group=>{
+        const isMulti = (group.getAttribute('data-select')||'multi') === 'multi';
+        group.addEventListener('click', (e)=>{
+          const btn = e.target.closest('.btn-chip');
+          if(!btn) return;
+          if(isMulti){
+            btn.classList.toggle('selected');
+          }else{
+            qsa('.btn-chip', group).forEach(b=>b.classList.toggle('selected', b===btn));
+          }
+          saveLocal();
+        });
+      });
+      // defaults
+      qsa('.btn-toggle-group .btn-chip[data-default="true"]').forEach(b=> b.classList.add('selected'));
+    }
+    function getSelected(groupSel){
+      return qsa(`${groupSel} .btn-chip.selected`).map(b=>b.getAttribute('data-value'));
+    }
+    function setSelected(groupSel, values){
+      const set = new Set(values||[]);
+      qsa(`${groupSel} .btn-chip`).forEach(b=> b.classList.toggle('selected', set.has(b.getAttribute('data-value'))));
+    }
+
+    // --- Gather/restore ---
     function getFormData(){
       return {
         dept: qs('#dept').value,
@@ -293,10 +311,10 @@
         destination: qs('#destination').value,
         task: qs('#task').value,
         people: qs('#people').value,
-        driveType: qsa('#driveType input[type=checkbox]:checked').map(el=>el.value),
-        location: qsa('#location input[type=checkbox]:checked').map(el=>el.value),
-        vehicle: qsa('#vehicle input[type=checkbox]:checked').map(el=>el.value),
-        driveOption: qsa('#driveOption input[type=checkbox]:checked').map(el=>el.value),
+        driveType: getSelected('#driveType'),
+        location: getSelected('#location'),
+        vehicle: getSelected('#vehicle'),
+        driveOption: getSelected('#driveOption'),
       };
     }
     function setFormData(data){
@@ -309,12 +327,12 @@
       Object.entries(map).forEach(([k,sel])=>{
         if(data[k]!==undefined) qs(sel).value = data[k];
       });
-      [['#driveType','driveType'], ['#location','location'], ['#vehicle','vehicle'], ['#driveOption','driveOption']]
-        .forEach(([sel,key])=>{
-          const setVals = new Set(data[key]||[]);
-          qsa(`${sel} input[type=checkbox]`).forEach(i=> i.checked = setVals.has(i.value));
-        });
+      setSelected('#driveType', data.driveType);
+      setSelected('#location', data.location);
+      setSelected('#vehicle', data.vehicle);
+      setSelected('#driveOption', data.driveOption);
     }
+
     function saveLocal(){
       try { localStorage.setItem(STORAGE_KEY, JSON.stringify(getFormData())); }
       catch(e){ console.warn('로컬 저장 실패:', e); }
@@ -376,21 +394,20 @@
     function resetForm(){
       if(confirm('Default 값을 제외한, 모든 내용을 초기화 하시겠습니까?')){
         qs('#dispatchForm').reset();
-        // defaults
+        // text defaults
         qs('#dept').value = '취재2부';
         qs('#tel').value = '0945';
         qs('#task').value = '취재';
         qs('#people').value = '2';
-        // checkbox defaults
-        qsa('#location input[type=checkbox]').forEach(i=>i.checked=false);
-        qsa('#driveOption input[type=checkbox]').forEach(i=>i.checked=false);
-        qs("#loc_bs").checked = true;
-        qs("#op_dr").checked = true;
+        // button defaults
+        qsa('.btn-toggle-group .btn-chip').forEach(b=> b.classList.remove('selected'));
+        qsa('.btn-toggle-group .btn-chip[data-default="true"]').forEach(b=> b.classList.add('selected'));
         clearLocal();
       }
     }
 
     document.addEventListener('DOMContentLoaded', ()=>{
+      initButtonGroups();
       loadLocal();
       attachAutosave();
       qs('#btnSave').addEventListener('click', saveForm);
@@ -399,6 +416,3 @@
   </script>
 </body>
 </html>
-
-
-
